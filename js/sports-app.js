@@ -13,10 +13,23 @@ async function triggerSportsSync() {
     btn.disabled = true;
     btn.textContent = 'Syncing ESPN...';
   }
+  
   try {
-    await fetch('/.netlify/functions/sync-sports');
-    cachedSportsData = null;
-    await loadHomeDashboard();
+    const res = await fetch('/.netlify/functions/sync-sports');
+    const data = await res.json();
+    
+    if (data.success) {
+      console.log('Sync successful:', data.results);
+      // Clear cache and reload dashboard data
+      cachedSportsData = null;
+      await loadHomeDashboard();
+      alert('Sports data synced successfully!');
+    } else {
+      alert('Sync failed: ' + (data.error || 'Unknown error'));
+    }
+  } catch (err) {
+    console.error('Sync error:', err);
+    alert('Failed to connect to sync function.');
   } finally {
     if (btn) {
       btn.disabled = false;
