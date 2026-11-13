@@ -12,12 +12,9 @@ const SPORT_CONFIGS = {
 export default async (req) => {
   const databaseUrl = process.env.NETLIFY_DATABASE_URL || process.env.DATABASE_URL;
   if (!databaseUrl) {
-    return new Response(JSON.stringify({ 
-      success: false, 
-      error: 'CRITICAL: No database connection string found in NETLIFY_DATABASE_URL or DATABASE_URL.' 
-    }), {
+    return new Response(JSON.stringify({ success: false, error: 'Database URL not configured.' }), {
       status: 500,
-      headers: { 'Content-Type': 'application/json' }
+      headers: { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' }
     });
   }
 
@@ -25,7 +22,7 @@ export default async (req) => {
   const results = [];
 
   try {
-    // 1. Auto-create tables in the public schema to prevent relation errors
+    // Auto-create tables in public schema
     await sql`
       CREATE TABLE IF NOT EXISTS public.msu_team_stats (
           id SERIAL PRIMARY KEY,
@@ -52,7 +49,6 @@ export default async (req) => {
       );
     `;
 
-    // 2. Fetch schedule data from ESPN for each sport
     for (const [key, config] of Object.entries(SPORT_CONFIGS)) {
       const url = `https://site.api.espn.com/apis/site/v2/sports/${config.sportPath}/teams/${MSU_TEAM_ID}/schedule?season=${CURRENT_SEASON}`;
       const response = await fetch(url);
@@ -118,13 +114,12 @@ export default async (req) => {
 
     return new Response(JSON.stringify({ success: true, results }), {
       status: 200,
-      headers: { 'Content-Type': 'application/json' }
+      headers: { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' }
     });
   } catch (error) {
-    console.error('ESPN Sync Error:', error);
     return new Response(JSON.stringify({ success: false, error: error.message }), {
       status: 500,
-      headers: { 'Content-Type': 'application/json' }
+      headers: { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' }
     });
   }
 };

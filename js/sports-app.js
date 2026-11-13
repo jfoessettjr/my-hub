@@ -16,11 +16,12 @@ async function triggerSportsSync() {
   
   try {
     const res = await fetch('/.netlify/functions/sync-sports');
+    if (!res.ok) {
+      throw new Error(`Server responded with status ${res.status}`);
+    }
     const data = await res.json();
     
     if (data.success) {
-      console.log('Sync successful:', data.results);
-      // Clear cache and reload dashboard data
       cachedSportsData = null;
       await loadHomeDashboard();
       alert('Sports data synced successfully!');
@@ -29,7 +30,7 @@ async function triggerSportsSync() {
     }
   } catch (err) {
     console.error('Sync error:', err);
-    alert('Failed to connect to sync function.');
+    alert('Failed to connect to sync function: ' + err.message);
   } finally {
     if (btn) {
       btn.disabled = false;
