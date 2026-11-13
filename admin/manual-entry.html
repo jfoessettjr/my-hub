@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Manual Sports Data Entry</title>
+  <link rel="stylesheet" href="/css/styles.css" />
+  <style>
+    .form-group { margin-bottom: 1.25rem; }
+    .form-group label { display: block; font-weight: bold; margin-bottom: 0.5rem; color: #18453B; }
+    .form-group input, .form-group select, .form-group textarea { width: 100%; padding: 0.75rem; border: 1px solid #ccc; border-radius: 4px; font-size: 1rem; }
+    .btn-submit { background-color: #18453B; color: #fff; padding: 0.75rem 1.5rem; border: none; border-radius: 4px; font-size: 1rem; cursor: pointer; }
+    .btn-submit:hover { opacity: 0.9; }
+  </style>
+</head>
+<body>
+  <header>
+    <a href="/index.html" class="brand">Spartan &amp; Vault Hub</a>
+    <nav>
+      <a href="/index.html">Dashboard</a>
+      <a href="/sports/msu.html">MSU Spartans</a>
+      <a href="/admin/manual-entry.html" class="active">Manual Entry</a>
+    </nav>
+  </header>
+
+  <main style="max-width: 600px; margin: 2rem auto;">
+    <div class="card">
+      <h1>Manual Sports Data Entry</h1>
+      <p class="muted">Add or update stats and game leaders manually for your tracker.</p>
+      
+      <form id="manual-entry-form" onsubmit="submitManualData(event)">
+        <div class="form-group">
+          <label for="sport">Select Sport</label>
+          <select id="sport" name="sport" required>
+            <option value="football">Football</option>
+            <option value="basketball">Men's Basketball</option>
+            <option value="hockey">Men's Hockey</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="season">Season / Year</label>
+          <input type="text" id="season" name="season" value="2026" required />
+        </div>
+
+        <div class="form-group">
+          <label for="record">Team Record (e.g., 5-2)</label>
+          <input type="text" id="record" name="record" placeholder="0-0" required />
+        </div>
+
+        <hr style="margin: 1.5rem 0; border:0; border-top:1px solid #eee;" />
+
+        <h3>Recent Game Leader Entry</h3>
+        <div class="form-group">
+          <label for="opponent">Opponent Name</label>
+          <input type="text" id="opponent" name="opponent" placeholder="e.g., Michigan" />
+        </div>
+
+        <div class="form-group">
+          <label for="result">Game Result (e.g., W 24-17)</label>
+          <input type="text" id="result" name="result" placeholder="W 24-17" />
+        </div>
+
+        <div class="form-group">
+          <label for="category">Leader Category (e.g., Passing Leader, Points Leader)</label>
+          <input type="text" id="category" name="category" placeholder="Passing Leader" />
+        </div>
+
+        <div class="form-group">
+          <label for="player_name">Player Name</label>
+          <input type="text" id="player_name" name="player_name" placeholder="Aidan Chiles" />
+        </div>
+
+        <div class="form-group">
+          <label for="stat_line">Stat Line (e.g., 243 YDS, 2 TD)</label>
+          <input type="text" id="stat_line" name="stat_line" placeholder="243 YDS, 2 TD" />
+        </div>
+
+        <button type="submit" class="btn-submit" id="submit-btn">Save Manual Data</button>
+      </form>
+    </div>
+  </main>
+
+  <script>
+    async function submitManualData(event) {
+      event.preventDefault();
+      const btn = document.getElementById('submit-btn');
+      btn.disabled = true;
+      btn.textContent = 'Saving...';
+
+      const payload = {
+        sport: document.getElementById('sport').value,
+        season: document.getElementById('season').value,
+        record: document.getElementById('record').value,
+        opponent: document.getElementById('opponent').value,
+        result: document.getElementById('result').value,
+        category: document.getElementById('category').value,
+        player_name: document.getElementById('player_name').value,
+        stat_line: document.getElementById('stat_line').value,
+      };
+
+      try {
+        const res = await fetch('/.netlify/functions/manual-entry', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        });
+
+        const data = await res.json();
+        if (data.success) {
+          alert('Data successfully saved and updated!');
+          document.getElementById('manual-entry-form').reset();
+          document.getElementById('season').value = '2026';
+        } else {
+          alert('Error saving data: ' + (data.error || 'Unknown error'));
+        }
+      } catch (err) {
+        console.error('Submission error:', err);
+        alert('Failed to connect to server function.');
+      } finally {
+        btn.disabled = false;
+        btn.textContent = 'Save Manual Data';
+      }
+    }
+  </script>
+</body>
+</html>
