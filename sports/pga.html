@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>PGA Tour Tracker</title>
+  <link rel="stylesheet" href="/css/styles.css" />
+</head>
+<body>
+  <header>
+    <a href="/index.html" class="brand">Spartan &amp; Vault Hub</a>
+    <nav>
+      <a href="/index.html">Dashboard</a>
+      <a href="/sports/msu.html">MSU Spartans</a>
+      <a href="/sports/nascar.html">NASCAR</a>
+      <a href="/sports/pga.html" class="active">PGA Tour</a>
+      <a href="/collection/vault.html">My Vault</a>
+    </nav>
+  </header>
+
+  <main>
+    <h1>PGA Tour Leaderboard</h1>
+    <div id="tour-detail-container" class="card" style="margin-top: 1.5rem;">
+      <p class="muted">Loading PGA Tour data...</p>
+    </div>
+  </main>
+
+  <script src="/js/sports-app.js"></script>
+  <script>
+    loadTourPage('pga');
+  </script>
+</body>
+</html>

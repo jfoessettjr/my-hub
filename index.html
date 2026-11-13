@@ -1,1 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>My Sports & Collectibles Hub</title>
+  <link rel="stylesheet" href="/css/styles.css" />
+</head>
+<body>
+  <header>
+    <a href="/index.html" class="brand">Spartan &amp; Vault Hub</a>
+    <nav>
+      <a href="/index.html" class="active">Dashboard</a>
+      <a href="/sports/msu.html">MSU Spartans</a>
+      <a href="/sports/nascar.html">NASCAR</a>
+      <a href="/sports/pga.html">PGA Tour</a>
+      <a href="/collection/vault.html">My Vault</a>
+    </nav>
+  </header>
 
+  <main>
+    <div class="page-header">
+      <div>
+        <h1>Command Center</h1>
+        <p class="muted">Live tracking for Michigan State, NASCAR, PGA Tour &amp; your personal collection.</p>
+      </div>
+      <button id="sync-now-btn" onclick="triggerSportsSync()">Sync Sports Now</button>
+    </div>
+
+    <h2>Michigan State Spartans</h2>
+    <div id="home-msu-grid" class="grid-3" style="margin-top: 1rem; margin-bottom: 2rem;">
+      <div class="card"><p class="muted">Loading MSU teams...</p></div>
+    </div>
+
+    <h2>Motorsports &amp; Golf</h2>
+    <div id="home-tours-grid" class="grid-2" style="margin-top: 1rem; margin-bottom: 2rem;">
+      <div class="card"><p class="muted">Loading NASCAR &amp; PGA...</p></div>
+    </div>
+
+    <div class="page-header">
+      <h2>My Collectibles Vault</h2>
+      <a href="/collection/vault.html" class="btn">Open Full Catalog</a>
+    </div>
+    <div id="home-vault-stats" class="stat-strip">
+      <div class="stat-box"><div class="muted">Total Items</div><div class="value" id="stat-total-items">--</div></div>
+      <div class="stat-box"><div class="muted">Total Invested</div><div class="value" id="stat-invested">--</div></div>
+      <div class="stat-box"><div class="muted">Estimated Value</div><div class="value" id="stat-value">--</div></div>
+    </div>
+  </main>
+
+  <script src="/js/sports-app.js"></script>
+  <script>
+    loadHomeDashboard();
+  </script>
+</body>
+</html>

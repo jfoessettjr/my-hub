@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Michigan State Spartans Tracker</title>
+  <link rel="stylesheet" href="/css/styles.css" />
+</head>
+<body>
+  <header>
+    <a href="/index.html" class="brand">Spartan &amp; Vault Hub</a>
+    <nav>
+      <a href="/index.html">Dashboard</a>
+      <a href="/sports/msu.html" class="active">MSU Spartans</a>
+      <a href="/sports/nascar.html">NASCAR</a>
+      <a href="/sports/pga.html">PGA Tour</a>
+      <a href="/collection/vault.html">My Vault</a>
+    </nav>
+  </header>
+
+  <main>
+    <div class="page-header">
+      <h1>Michigan State Spartans</h1>
+      <div style="display:flex; gap:0.5rem;">
+        <button class="secondary active" onclick="selectMsuSport('football', this)">Football</button>
+        <button class="secondary" onclick="selectMsuSport('basketball', this)">Men's Basketball</button>
+        <button class="secondary" onclick="selectMsuSport('hockey', this)">Men's Hockey</button>
+      </div>
+    </div>
+
+    <div id="msu-detail-container" class="card">
+      <p class="muted">Loading Spartan stats...</p>
+    </div>
+  </main>
+
+  <script src="/js/sports-app.js"></script>
+  <script>
+    initMsuPage();
+  </script>
+</body>
+</html>

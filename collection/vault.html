@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>My Collectibles Vault</title>
+  <link rel="stylesheet" href="/css/styles.css" />
+</head>
+<body>
+  <header>
+    <a href="/index.html" class="brand">Spartan &amp; Vault Hub</a>
+    <nav>
+      <a href="/index.html">Dashboard</a>
+      <a href="/sports/msu.html">MSU Spartans</a>
+      <a href="/sports/nascar.html">NASCAR</a>
+      <a href="/sports/pga.html">PGA Tour</a>
+      <a href="/collection/vault.html" class="active">My Vault</a>
+    </nav>
+  </header>
+
+  <main>
+    <div class="page-header">
+      <div>
+        <h1>Personal Collectibles Vault</h1>
+        <p class="muted">Catalog your vinyl records, books, video games, and sports cards.</p>
+      </div>
+      <button onclick="toggleAddForm()">+ Add New Item</button>
+    </div>
+
+    <!-- Add Item Collapsible Card -->
+    <section id="add-item-card" class="card" style="display:none;">
+      <h2>Add to Collection</h2>
+      <form id="catalog-form" onsubmit="submitCatalogItem(event)">
+        <div class="form-grid">
+          <div>
+            <label>Category *</label>
+            <select id="item-category" onchange="renderCategoryFields()" required>
+              <option value="vinyl">Vinyl Record</option>
+              <option value="book">Book</option>
+              <option value="video_game">Video Game</option>
+              <option value="sports_card">Sports Card</option>
+            </select>
+          </div>
+          <div>
+            <label>Title / Card Description *</label>
+            <input type="text" id="item-title" placeholder="e.g., Dark Side of the Moon / 2023 Topps Chrome" required />
+          </div>
+          <div>
+            <label id="creator-label">Artist *</label>
+            <input type="text" id="item-creator" placeholder="Artist, Author, Studio, or Player" />
+          </div>
+          <div>
+            <label>Release Year</label>
+            <input type="number" id="item-year" placeholder="1973" />
+          </div>
+          <div>
+            <label>Condition / Grade</label>
+            <input type="text" id="item-condition" placeholder="e.g., VG+, PSA 10, CIB, Hardcover" />
+          </div>
+          <div>
+            <label>Purchase Price ($)</label>
+            <input type="number" step="0.01" id="item-cost" placeholder="0.00" />
+          </div>
+          <div>
+            <label>Estimated Value ($)</label>
+            <input type="number" step="0.01" id="item-value" placeholder="0.00" />
+          </div>
+        </div>
+
+        <!-- Category-Specific Dynamic Fields -->
+        <div id="dynamic-fields" class="form-grid" style="margin-top: 1rem;"></div>
+
+        <div style="margin-top: 1rem;">
+          <label>Notes</label>
+          <input type="text" id="item-notes" placeholder="Pressing notes, serial number, shelf location..." />
+        </div>
+
+        <div style="margin-top: 1.25rem; display: flex; gap: 0.75rem;">
+          <button type="submit">Save Item</button>
+          <button type="button" class="secondary" onclick="toggleAddForm()">Cancel</button>
+        </div>
+      </form>
+    </section>
+
+    <!-- Summary Strip -->
+    <div class="stat-strip">
+      <div class="stat-box"><div class="muted">Showing Items</div><div class="value" id="vault-count">0</div></div>
+      <div class="stat-box"><div class="muted">Total Cost</div><div class="value" id="vault-cost">$0.00</div></div>
+      <div class="stat-box"><div class="muted">Est. Value</div><div class="value" id="vault-val">$0.00</div></div>
+    </div>
+
+    <!-- Filter & Search Controls -->
+    <div class="page-header">
+      <div style="display:flex; flex-wrap:wrap; gap:0.5rem;" id="filter-tabs">
+        <button class="secondary active" onclick="filterVault('all', this)">All</button>
+        <button class="secondary" onclick="filterVault('vinyl', this)">Vinyl</button>
+        <button class="secondary" onclick="filterVault('book', this)">Books</button>
+        <button class="secondary" onclick="filterVault('video_game', this)">Video Games</button>
+        <button class="secondary" onclick="filterVault('sports_card', this)">Sports Cards</button>
+      </div>
+      <input type="text" id="vault-search" placeholder="Search title, player, artist..." style="max-width: 280px;" oninput="renderVaultList()" />
+    </div>
+
+    <!-- Catalog Display Grid -->
+    <div id="vault-grid" class="grid-3">
+      <div class="card"><p class="muted">Loading collection...</p></div>
+    </div>
+  </main>
+
+  <script src="/js/vault-app.js"></script>
+  <script>
+    initVault();
+  </script>
+</body>
+</html>
