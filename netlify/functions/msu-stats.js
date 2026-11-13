@@ -16,7 +16,6 @@ export default async (req) => {
     const dbUrl = process.env.NETLIFY_DATABASE_URL || process.env.DATABASE_URL;
     const sql = neon(dbUrl);
 
-    // 1. Fetch latest team stats for the requested sport
     const teamRows = await sql`
       SELECT record, conference_standing, stats_json, updated_at 
       FROM public.msu_team_stats 
@@ -25,24 +24,29 @@ export default async (req) => {
       LIMIT 1;
     `;
 
-    // 2. Fetch unique games list for the dropdown
     const gamesRows = await sql`
-      SELECT DISTINCT game_date, opponent, result 
+      SELECT DISTINCT TO_CHAR(game_date, 'YYYY-MM-DD') AS game_date, opponent, result 
       FROM public.msu_game_leaders 
       WHERE LOWER(sport) = LOWER(${sport}) 
       ORDER BY game_date DESC;
     `;
 
-    // 3. Fetch all game leaders for this sport
     const leaderRows = await sql`
-      SELECT opponent, result, category, player_name, stat_line, game_date 
+      SELECT opponent, result, category, player_name, stat_line, TO_CHAR(game_date, 'YYYY-MM-DD') AS game_date 
       FROM public.msu_game_leaders 
       WHERE LOWER(sport) = LOWER(${sport}) 
       ORDER BY game_date DESC;
     `;
+
+    let team = teamRows[0] || null;
+    if (team) {
+      const sj = team.stats_json || {};
+      team.opponent = sj.opponent || sj.Opponent || leaderRows[0]?.opponent || 'N/A';
+      team.result = sj.result || sj['Recent Result'] || leaderRows[0]?.result || 'N/A';
+    }
 
     return new Response(JSON.stringify({
-      team: teamRows[0] || null,
+      team,
       games: gamesRows || [],
       leaders: leaderRows || []
     }), {
