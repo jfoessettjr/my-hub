@@ -15,12 +15,11 @@ async function triggerSportsSync() {
   }
   
   try {
-    const res = await fetch('/.netlify/functions/sync-sports');
-    if (!res.ok) {
-      throw new Error(`Server responded with status ${res.status}`);
-    }
-    const data = await res.json();
+    // Call the dedicated manual trigger endpoint instead of the scheduled cron function
+    const res = await fetch('/.netlify/functions/trigger-sync');
+    if (!res.ok) throw new Error(`Server responded with status ${res.status}`);
     
+    const data = await res.json();
     if (data.success) {
       cachedSportsData = null;
       await loadHomeDashboard();
